@@ -1,0 +1,67 @@
+title: "Cleaning a Data Set"
+author: "Nina Radosic"
+date: "4/15/2020"
+
+This is the final project for the Getting and Cleaning Data course on coursera. 
+
+The data was collected from: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+This data used a smartphone to measure the movements of the person wearing it. According to the README attached with
+the dataset, the measurements were the following:
+"- Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration.
+- Triaxial Angular velocity from the gyroscope. 
+- A 561-feature vector with time and frequency domain variables.
+- Its activity label. 
+- An identifier of the subject who carried out the experiment."
+
+
+
+THE FOLLOWING IS THE PROCESS TO CREATE A TIDY DATA FILE FROM THE RAW DATA:
+
+1) The script reads in the packages which will be necessarry: dplyr and tidyverse 
+
+
+2) The functions starting with "if(!file.exists..." check if the file has already been downloaded and extracted. 
+If not, they download the data from the internet and then extract the .zip folder. 
+
+
+3)
+Note: the dimensions of a subset of the data are in parentheses to the right of the line of the codebook. 
+The following few lines (from "activities" to "y_training") assign tables to values, preparing them to be 
+combined into one data set, as follows:
+activities <- activity_labels.txt (contains list of activities the subjects performed) (6 rows, 2 columns)
+features <- features.txt (contains 3-axial signals, measured in degrees) (561 rows, 2 columns)
+subject_test <- subject_test.txt (contains testing data of test subjects) (2947 rows, 1 column)
+x_test <- X_test.txt (contains features test data) (2947 rows, 561 columns)
+y_test <- y_test.txt (contains test data of code labels of the activities) (2947 rows, 1 column)
+subject_training <- subject_train.txt (contains training data of test subjects) (7352 rows, 1 column)
+x_training <- X_train.txt (contains features train data) (7352 rows, 561 column)
+y_training <- y_train.txt (contains train data of code labels of activities)
+
+"x_bound" through "combinedData" perform this combining of data:
+x_bound <- rbind(x_training, x_test) (10299 rows, 561 columns)
+y_bound <- rbind(y_training, y_test) (10299 rows, 1 column)
+subject_bound <- rbind(subject_training, subject_test) (10299 rows, 1 column)
+combinedData <- cbind(x_bound, y_bound, subject_bound) (10299 rows, 563 columns)
+
+
+4) "dataAverages" gets the means and standard deviations of combinedData (10299 rows, 88 columns)
+
+5) the following function ("dataAverages %>% ... ") renames the variables from the data set so that they are 
+easier to interpret and therefore analyze.
+The new names are to the left of the equal sign, and the old values are to the right, as follows (in alphabetical
+order):
+	 Accelometer = Acc
+ 	 Angle = angle
+	 Body = BodyBody
+	 Frequency = ^f
+ 	 Gravity = gravity 
+	 Gyroscope = Gyro
+ 	 Magnitude = Mag
+	 Mean = mean()
+	 Standard Deviation = -std()
+	 Time = ^t
+
+6) "tidyData" creates an independent tidy data set with the average of each variable for each activity and 
+each subject (180 rows, 88 columns) and exports it into a .txt file
+
+\
